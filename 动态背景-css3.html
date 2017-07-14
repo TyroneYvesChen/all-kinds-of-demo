@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>动态背景-css3</title>
+    <style type="text/css">
+        .box{
+            height: 270px;
+            transition: -webkit-filter 0.2s ease, background-image 0.2s ease;
+            background: linear-gradient(223deg, #9ce8dd, #a993da, #F0CB54, #6D93A3);
+            background-size: 600% 600%;
+            -webkit-animation: bg-generator 5s ease infinite;
+            animation: bg-generator 5s ease infinite;
+        }
+
+        @keyframes  bg-generator{
+            0% {
+                background-position: 0% 84%;
+            }
+            50% {
+                background-position: 100% 17%;
+            }
+            100% {
+                background-position: 0% 84%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="box"></div>
+
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
