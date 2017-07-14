@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>监控数据</title>
+    <style type="text/css">
+    </style>
+
+</head>
+<body>
+<script>
+    /*监控*/
+
+    function createProxyObject(obj) {
+        return new Proxy(obj,{
+            get: function(target,name){
+                return name in target?target[name]:undefined
+            },
+            set: function(target,name,value){
+                if (typeof value === "object") value = createProxyObject(createProxyObject);
+                console.log("set proxy value:", value);
+                return target[name]=value
+            }
+        })
+    }
+
+    var a = createProxyObject({});
+    a.b = {};
+    a.c = 1
+</script>
+</body>
+</html>
