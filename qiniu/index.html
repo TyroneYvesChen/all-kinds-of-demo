@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>七牛</title>
+    <style>
+        .btn{
+            display: inline-block;
+            margin: 0 auto;
+            width: 200px;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            box-shadow: #ccc 1px 1px 1px 1px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="btn" id="uploadBtn">点我</div>
+<div class="btn" id="confirmBtn">上传</div>
+<div id="container" style="visibility: hidden"></div>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/moxie.js"></script>
+<script type="text/javascript" src="js/plupload.dev.js"></script>
+<script type="text/javascript" src="js/ui.js"></script>
+<script type="text/javascript" src="js/qiniu.js"></script>
+<script>
+    domain="";
+    AJAX_URL = "";
+    function AjaxComponent(url,data) {
+        this.type = 'post';
+        this.async = true;
+        if(data) this.data = data;
+        this.url = AJAX_URL + url;
+        this.error = function(e) {
+            console.log(e);
+        };
+        this.run = function () {
+            //console.log(this);
+            return $.ajax(this);
+        }
+    }
+    getQiNiuTokenAjax()
+    function getQiNiuTokenAjax() {
+        var getQiNiuToken = new AjaxComponent("/qiniu/getQiNiuUpToKen.do");
+        getQiNiuToken.success = function (data) {
+            qiniuInit(data);
+        };
+        getQiNiuToken.type = "get";
+        getQiNiuToken.run();
+    }
+
+
+    function qiniuInit(data) {
+        var option = {
+            runtimes: 'html5,flash,html4',      // 上传模式，依次退化
+            browse_button: "uploadBtn",         // 上传选择的点选按钮，必需
+            uptoken: data.uptoken, // uptoken是上传凭证，由其他程序生成
+            get_new_uptoken: false,             // 设置上传文件的时候是否每次都重新获取新的uptoken
+            // downtoken_url: '/downtoken',
+            // Ajax请求downToken的Url，私有空间时使用，JS-SDK将向该地址POST文件的key和domain，服务端返回的JSON必须包含url字段，url值为该文件的下载地址
+            // unique_names: true,              // 默认false，key为文件名。若开启该选项，JS-SDK会为每个文件自动生成key（文件名）
+            // save_key: true,                  // 默认false。若在服务端生成uptoken的上传策略中指定了sava_key，则开启，SDK在前端将不对key进行任何处理
+            domain: domain,     // bucket域名，下载资源时用到，必需
+            container: 'container',             // 上传区域DOM ID，默认是browser_button的父元素
+            max_file_size: '100mb',             // 最大文件体积限制
+            //                flash_swf_url: 'path/of/plupload/Moxie.swf',  //引入flash，相对路径
+            max_retries: 3,                     // 上传失败最大重试次数
+            dragdrop: true,                     // 开启可拖曳上传
+            drop_element: 'container',          // 拖曳上传区域元素的ID，拖曳文件或文件夹后可触发上传
+            chunk_size: '4mb',                  // 分块上传时，每块的体积
+            auto_start: false,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
+            multi_selection: false,             // 设置一次只能选择一个文件
+            init: {
+                'FilesAdded': function(up, files) {
+                    // console.log(up);
+                    // console.log(files);
+                    var filesName = files[0].name;
+                    plupload.each(files, function(file) {
+                        // 文件添加进队列后，处理相关的事情
+                        up.files.forEach(function (f) {
+                            if(f.id!=file.id){up.removeFile(f)}
+                        })
+                    });
+                },
+                'FileUploaded': function (up, file, info) {
+                    // console.log(info);
+                    var res = JSON.parse(info);
+                },
+                'Key': function(up, file) {
+                    var date = new Date(),
+                            year = date.getFullYear(),
+                            month = date.getMonth()+1,
+                            day = date.getDate(),
+                            hour = date.getHours(),
+                            minute = date.getMinutes(),
+                            second = date.getSeconds(),
+                            allTime=year+""+month+""+day+""+hour+""+minute+""+second;
+                    var fileExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+                    // if(fileExtension=="jpg"||fileExtension=="png"
+                    //     ||fileExtension=="jpeg"||fileExtension=="gif"
+                    //     ||fileExtension=="bmp"){
+                    //     var key = "img/"+allTime+file.name;
+                    // }else{
+                    //     var key = "video/"+allTime+file.name;
+                    // }
+                    var key = "youwanturl/"+allTime+file.name;
+
+                    // do something with key
+                    return key
+                }
+            }
+        };
+
+        var uploader = Qiniu.uploader(option);
+
+        $("#confirmBtn").on("click", function () {
+            uploader.start();   //开始传输
+        })
+    }
+</script>
+</body>
+</html>
