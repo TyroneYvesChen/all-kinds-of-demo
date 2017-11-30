@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>定时器排序法</title>
+    <style type="text/css">
+    </style>
+
+</head>
+<body>
+
+<script>
+    /**
+     * 定时器排序法
+     *
+     * @param {Array<number>} list (类)数组
+     * @param {function} callback 排序后的回调
+     */
+    function getSortList(list, callback) {
+        var result = [];
+
+        for (var i = 0, len = list.length; i < len; i++) {
+            (function (i) {
+                setTimeout(() => {
+                    result.push(list[i]);
+                }, list[i]);
+            })(i);
+        }
+
+        var maxNum = Math.max.apply(null, arr);
+        setTimeout(() => {
+            callback(result);
+        }, maxNum + 1);
+    }
+
+    var arr = [
+        34, 12, 76, 8, 23, 99, 64
+    ];
+
+    getSortList(arr, function (list) {
+        console.log(list);
+    })
+
+</script>
+</body>
+</html>
