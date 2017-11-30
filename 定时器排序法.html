@@ -41,6 +41,11 @@
         console.log(list);
     })
 
+
+
+    const sort = ary => new Promise(resolve => resolve(ary.reduce((ret, item) => setTimeout(() => ret.push(item), item) && ret,[])))
+
+
 </script>
 </body>
 </html>
