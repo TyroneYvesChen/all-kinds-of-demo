@@ -37,6 +37,7 @@
         var later = function() {
             var last = new Date() - timestamp;
 
+            clearTimeout(timeout);
             if(last < wait && last >= 0) {
                 timeout = setTimeout(later, wait - last);
             } else {
@@ -58,6 +59,7 @@
             var callNow = immediate && !timeout;
 
             if(!timeout) {
+                clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
             }
 
@@ -73,7 +75,6 @@
     box.onclick = debounce(function () {
         console.log(i ++)
     }, 1000)
-
 </script>
 </body>
 </html>
