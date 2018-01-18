@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jq-data方法bug</title>
+</head>
+<style type="text/css">
+</style>
+<body>
+<div data-name="tom" id="ele"></div>
+
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script>
+    var $ele = $('#ele'); // jq 对象
+
+    var ele = $ele[0]; // 原生对象
+
+
+    // 1. data-name 存放在 dataset.name 中
+    console.log(ele.dataset.name);
+
+    // 2. $.fn.data 先从 $.cache 中找
+    // 找不到就找 原生对象的 dataset
+    console.log($ele.data('name'));
+
+    // 3. $.fn.data 是放在 $.cache 中
+    $ele.data('name','lily');
+
+    // 4. 出错情况如该例子
+    // 使用了 data 设置缓存到 $.cache ，然后又试图用 $.fn.data 取 data-name
+
+    console.log('------------');
+    console.log('$.fn.data:');
+    console.log($ele.data('name'));
+    console.log('$.fn.attr:')
+    console.log($ele.attr('data-name'));
+    console.log('------------');
+
+</script>
+</body>
+</html>

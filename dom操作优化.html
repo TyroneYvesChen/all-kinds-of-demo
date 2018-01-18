@@ -11,73 +11,48 @@
 
 
 <script type="text/javascript">
-    var array=[
-        1,
-        2,
-        99,
-        "age",
-        456,
-        ["a",12,41,[554,12,[9,10,[10,20]]],
-            {type:123},
-            [[45],[5],6542]
-        ],
-        556
-    ];
-    function selectNum(arr) {
-        var arrNumber = [];
-        (function (arr) {
-            for (var i=0;i<arr.length;i++){
-                if(typeof arr[i] == "string") continue;
-                if(typeof arr[i] == "number") arrNumber.push(arr[i]);
-                if (typeof arr[i] == "object") arguments.callee(arr[i]);
+    (function () {
+        const ndContainer = document.getElementById('js-list');
+        if (!ndContainer) {
+            return
+        }
+
+        const total = 30000;
+        const batchSize = 4; // 每批插入的节点次数，越大越卡
+        const batchCount = total / batchSize; // 需要批量处理多少次
+        let batchDone = 0;  // 已经完成的批处理个数
+
+        function appendItems() {
+            const fragment = document.createDocumentFragment();
+            for (let i = 0; i < batchSize; i++) {
+                const ndItem = document.createElement('li');
+                ndItem.innerText = (batchDone * batchSize) + i + 1;
+                fragment.appendChild(ndItem);
             }
-        })(arr);
-        return arrNumber
-    }
-    console.log(selectNum(array));
 
-$(function () {
-    const ndContainer = document.getElementById('js-list');
-    if (!ndContainer) {
-        return
-    }
+            // 每次批处理只修改 1 次 DOM
+            ndContainer.appendChild(fragment);
 
-    const total = 30000;
-    const batchSize = 4; // 每批插入的节点次数，越大越卡
-    const batchCount = total / batchSize; // 需要批量处理多少次
-    let batchDone = 0;  // 已经完成的批处理个数
-
-    function appendItems() {
-        const fragment = document.createDocumentFragment();
-        for (let i = 0; i < batchSize; i++) {
-            const ndItem = document.createElement('li');
-            ndItem.innerText = (batchDone * batchSize) + i + 1;
-            fragment.appendChild(ndItem);
+            batchDone += 1;
+            doBatchAppend();
         }
 
-        // 每次批处理只修改 1 次 DOM
-        ndContainer.appendChild(fragment);
+        function doBatchAppend() {
+            if (batchDone < batchCount) {
+                window.requestAnimationFrame(appendItems);
+            }
+        }
 
-        batchDone += 1;
+        // kickoff
         doBatchAppend();
-    }
 
-    function doBatchAppend() {
-        if (batchDone < batchCount) {
-            window.requestAnimationFrame(appendItems);
-        }
-    }
-
-    // kickoff
-    doBatchAppend();
-
-    ndContainer.addEventListener('click', function (e) {
-        const target = e.target;
-        if (target.tagName === 'LI') {
-            alert(target.innerHTML);
-        }
-    });
-})
+        ndContainer.addEventListener('click', function (e) {
+            const target = e.target;
+            if (target.tagName === 'LI') {
+                alert(target.innerHTML);
+            }
+        });
+    })()
 
 </script>
 </body>

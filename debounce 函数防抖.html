@@ -27,16 +27,15 @@
      * delay 需要延迟的时间
      * immediate 是否需要立即执行初始事件 默认false
      */
-    var debounce = function(fn, wait, immediate) {
-        var timeout,
+    let debounce = function(fn, wait, immediate) {
+        let timeout,
             args,
             context,
             timestamp,
             result;
 
-        var later = function() {
-            var last = new Date() - timestamp;
-
+        let later = function() {
+            let last = new Date() - timestamp;
             clearTimeout(timeout);
             if(last < wait && last >= 0) {
                 timeout = setTimeout(later, wait - last);
@@ -56,10 +55,11 @@
             context = this;
             args = arguments;
             timestamp = new Date();
-            var callNow = immediate && !timeout;
+            let callNow = immediate && !timeout;
 
             if(!timeout) {
                 clearTimeout(timeout);
+                console.log(timeout)
                 timeout = setTimeout(later, wait);
             }
 
@@ -71,7 +71,7 @@
             return result;
         }
     };
-    var i = 0
+    let i = 0
     box.onclick = debounce(function () {
         console.log(i ++)
     }, 1000)
