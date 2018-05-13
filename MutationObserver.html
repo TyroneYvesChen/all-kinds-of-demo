@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MutationObserver demo</title>
+</head>
+<style type="text/css">
+    #box {
+        display: inline-block;
+        background-color: aquamarine;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div id="box">clich me!</div>
+    <div id="wocao"></div>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        let observer = new MutationObserver(callback)
+        let article = document.body
+
+        let options = {
+            'childList': true,
+            'subtree': true
+        };
+
+        observer.observe(article, options);
+
+        function callback(arr, observer) {
+            console.log(arr)
+            console.log(observer)
+        }
+
+        let index = 0
+
+        $("#box").on("click", function () {
+            for (let i = 0; i < 10; i++) {
+                $("#wocao").append(`<div>${index}</div>`)
+                setTimeout(_ => {
+                    let $dom = $(`<div>${index}</div>`)
+                    index++
+                    $("body").append($dom)
+                }, 1000 * i)
+            }
+
+        })
+    </script>
+</body>
+
+</html>
