@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>lazyLoading 懒加载</title>
+</head>
+<style type="text/css">
+    #box {
+        display: inline-block;
+        width: 200px;
+        height: 50px;
+        line-height: 50px;
+        border: 1px solid #ccc;
+        text-align: center;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+    <div id="box">点击测试</div>
+
+
+
+    <script>
+        /**
+         * lazyLoading 懒加载
+         * options：
+         * data 需要进行懒加载的数据 Array
+         * cb 每次需要处理的回调
+         * endFn 所有数据处理完成后的回调
+         * rows 每次加载多少条
+         */
+        function lazyLoading(options) {
+            var data = options.data,
+                endFn = options.endFn,
+                cb = options.cb,
+                _index = 0,
+                len = data.length,
+                rows = options.rows || 10,   //每次加载多少条
+                step = options.step || 500
+                forLen = rows * _index,
+                arr = [];
+
+            var intervalId = setInterval(function () {
+                _index += 1
+                if (len - forLen > rows) {
+                    forLen = rows * _index
+                } else if (len - forLen <= rows && len - forLen > 0) {
+                    forLen = len
+                } else {
+                    clearInterval(intervalId)
+                    endFn && endFn()
+                    return
+                }
+                for (var i = rows * (_index - 1); i < forLen; i++) {
+                    arr.push(data[i])
+                }
+                cb && cb(arr)
+                arr = []
+            }, step)
+        }
+
+
+        let data = [];
+        for (let i = 0; i < 105; i++) {
+            data.push(i)
+        }
+
+        box.onclick = function () {
+            const options = {
+                data: data,
+                endFn: function () {
+                    console.log('It is done!')
+                },
+                cb: function (data) {
+                    console.log(data)
+                }
+            }
+            lazyLoading(options)
+        }
+    </script>
+</body>
+
+</html>
