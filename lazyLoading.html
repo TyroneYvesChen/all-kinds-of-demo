@@ -30,9 +30,10 @@
          * cb 每次需要处理的回调
          * endFn 所有数据处理完成后的回调
          * rows 每次加载多少条
+         * step 每次处理时间间隔
          */
         function lazyLoading(options) {
-            var data = options.data,
+            var data = options.data || [],
                 endFn = options.endFn,
                 cb = options.cb,
                 _index = 0,
@@ -70,6 +71,8 @@
         box.onclick = function () {
             const options = {
                 data: data,
+                rows: 5,
+                step: 1000,
                 endFn: function () {
                     console.log('It is done!')
                 },
