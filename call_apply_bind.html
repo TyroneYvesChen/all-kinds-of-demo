@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>实现call,apply,bind</title>
+</head>
+
+<body>
+    <script>
+        const _call = function (obj) {
+            const content = obj || window
+            const options = [...arguments].slice(1)
+            const fn = this
+            // console.log(options)
+            // console.log(fn)
+            return fn.bind(content)(...options)
+        }
+
+        const _call2 = function (obj) {
+            let content = obj || window
+            const options = [...arguments].slice(1)
+            content.fn = this
+            const result = content.fn(...options)
+            delete content.fn
+            return result
+        }
+
+        const _apply = function (obj) {
+            let content = obj || window
+            const options = [...arguments[1]]
+            console.log(options)
+            content.fn = this
+            const result = content.fn(...options)
+            delete content.fn
+            return result
+        }
+
+        const _bind = function (obj) {
+            let content = obj || window
+            const fn = this
+            const options = [...arguments].slice(1)
+            return function () {
+                return fn.call(content, options.concat(...arguments))
+            }
+        }
+
+        Function.prototype._call = _call
+        Function.prototype._call2 = _call2
+        Function.prototype._apply = _apply
+        Function.prototype._bind = _bind
+
+        let a = {
+            a: '成功！！！'
+        }
+        function fn() {
+            console.log(arguments, 'fn')
+            return this.a
+        }
+        console.log(fn._bind(a, 1, 2, 3)(222), '------------------')
+    </script>
+</body>
+
+</html>
