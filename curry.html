@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>curry实现</title>
+    <style type="text/css"></style>
+  </head>
+  <body>
+    <script>
+      function curry(fn, arr = []) {
+        return fn.length === arr.length
+          ? fn.apply(null, arr)
+          : function(...args) {
+              return curry(fn, arr.concat(args))
+            }
+      }
+
+      const curry2 = (fn, arr = []) =>
+        fn.length === arr.length
+          ? fn(...arr)
+          : (...args) => curry(fn, [...arr, ...args])
+
+      function a(data) {
+        console.log(data)
+      }
+      curry(a)(5)
+    </script>
+  </body>
+</html>
