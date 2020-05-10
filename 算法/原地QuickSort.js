@@ -7,10 +7,10 @@ function QuickSort(arr, low, high) {
   let right = high
   let basic = arr[low]
   while (left < right) {
-    while (left < right && arr[right] > basic) {
+    while (arr[right] > basic) {
       right--
     }
-    while (left < right && arr[left] <= basic) {
+    while (arr[left] <= basic) {
       left++
     }
 
