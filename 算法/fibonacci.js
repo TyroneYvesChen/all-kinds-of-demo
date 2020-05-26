@@ -1,15 +1,13 @@
 // 递归
-function febonaqie(n) {
+function fibonacci(n) {
   if (n <= 1) {
-    arr.push(1)
-    return
+    return 1
   }
-  arr.push(n)
-  febonaqie(n - 1) + febonaqie(n - 2)
+  return fibonacci(n - 1) + fibonacci(n - 2)
 }
 
 // 遍历，因为递归会出现爆栈的情况。遍历这不会
-function febonaqie2(n) {
+function fibonacci2(n) {
   let arr = []
 
   for (let i = 0; i < n; i++) {
@@ -24,4 +22,4 @@ function febonaqie2(n) {
   return arr[n - 1]
 }
 
-console.log(febonaqie2(100))
+console.log(fibonacci(2))
