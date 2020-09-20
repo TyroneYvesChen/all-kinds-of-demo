@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSS宽高比为 2:1自适应水平垂直居中矩形</title>
+    <style type="text/css">
+      /*实现原理参考自适应正方形和水平居中方式*/
+      .box {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        margin: auto;
+
+        width: 10%;
+        height: 0;
+        padding-top: 20%;
+        background: tomato;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
+
+    <script type="text/javascript"></script>
+  </body>
+</html>
