@@ -18,7 +18,6 @@ function fibonacci2(n) {
     }
   }
 
-  console.log(arr[n - 1])
   return arr[n - 1]
 }
 
