@@ -10,6 +10,7 @@ function limit(count, array, iterateFunc) {
   const tasks = []
   const doingTasks = []
   let i = 0
+
   const enqueue = () => {
     if (i === array.length) {
       return Promise.resolve()
@@ -24,11 +25,12 @@ function limit(count, array, iterateFunc) {
       doingTasks.length >= count ? Promise.race(doingTasks) : Promise.resolve()
     return res.then(enqueue)
   }
+
   return enqueue().then(() => Promise.all(tasks))
 }
 
 // test
-const timeout = i => new Promise(resolve => setTimeout(() => resolve(i), i))
-limit(2, [1000, 1000, 1000, 1000], timeout).then(res => {
+const timeout = (i) => new Promise((resolve) => setTimeout(() => resolve(i), i))
+limit(2, [1000, 1000, 1000, 1000], timeout).then((res) => {
   console.log(res)
 })

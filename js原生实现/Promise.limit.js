@@ -16,9 +16,7 @@ class Limit {
     if (this.count < this.limit && this.queue.length) {
       // 等到 Promise 计数器小于阈值时，则出队执行
       const { fn, resolve, reject } = this.queue.shift()
-      this.run(fn)
-        .then(resolve)
-        .catch(reject)
+      this.run(fn).then(resolve).catch(reject)
     }
   }
 
@@ -44,11 +42,40 @@ class Limit {
   }
 }
 
-Promise.map = function(list, fn, { concurrency }) {
+Promise.map = function (list, fn, { concurrency }) {
   const limit = new Limit(concurrency)
   return Promise.all(
     list.map((...args) => {
       return limit.build(() => fn(...args))
     })
   )
+}
+
+function limitRunTask(tasks, n) {
+  return new Promise((resolve, reject) => {
+    let index = 0,
+      finish = 0,
+      start = 0,
+      res = []
+    function run() {
+      if (finish == tasks.length) {
+        resolve(res)
+        return
+      }
+      while (start < n && index < tasks.length) {
+        // 每一阶段的任务数量++
+        start++
+        let cur = index
+        tasks[index++]().then((v) => {
+          start--
+          finish++
+          res[cur] = v
+          run()
+        })
+      }
+    }
+    run()
+  })
+  // 大概解释一下：首先如何限制最大数量n
+  // while 循环start < n，然后就是then的回调
 }
