@@ -22,3 +22,17 @@ function fibonacci2(n) {
 }
 
 console.log(fibonacci(2))
+
+function getFibonacci(n) {
+  let arr = []
+  let i = 0
+  while (i < n) {
+    if (i < 2) {
+      arr.push(i)
+    } else {
+      arr.push(arr[i - 1] + arr[i - 2])
+    }
+    i++
+  }
+  return arr
+}
